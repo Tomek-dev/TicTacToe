@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tictactoe
+    username: postgres
+    password: password
+    hikari:
+      maximumPoolSize: 2
+      connectionTimeout: 40000
+  jpa:
+    hibernate:
+      ddl-auto: create
