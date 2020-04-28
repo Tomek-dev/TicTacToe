@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private Player player;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
