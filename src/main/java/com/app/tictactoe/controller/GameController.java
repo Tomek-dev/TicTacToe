@@ -101,8 +101,8 @@ public class GameController {
         Set<FieldAction> fields = fieldService.findByGameId(id);
         UpdateMessage message = new UpdateMessage(Type.UPDATE, fields);
         GameDto gameDto = gameService.findById(id);
-        sendingOperations.convertAndSendToUser(gameDto.getO(), "/queue/game", message);
-        sendingOperations.convertAndSendToUser(gameDto.getX(), "/queue/game", message);
+        sendingOperations.convertAndSendToUser(gameDto.getOUserUsername(), "/queue/game", message);
+        sendingOperations.convertAndSendToUser(gameDto.getXUserUsername(), "/queue/game", message);
         stopService.deleteByGameId(id);
     }
 

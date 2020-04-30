@@ -33,4 +33,8 @@ public class PlayerBuilder {
         player.setO(o);
         return this;
     }
+
+    public Player build(){
+        return player;
+    }
 }

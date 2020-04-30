@@ -7,7 +7,6 @@ import com.app.tictactoe.model.Player;
 import com.app.tictactoe.model.PreGame;
 import com.app.tictactoe.other.builder.GameBuilder;
 import com.app.tictactoe.other.dto.GameDto;
-import com.app.tictactoe.other.enums.Mark;
 import com.app.tictactoe.other.enums.Process;
 import com.app.tictactoe.other.enums.Win;
 import com.app.tictactoe.other.exceptions.GameNotFoundException;

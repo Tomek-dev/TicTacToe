@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class GameDto {
 
-    private String x;
-    private String o;
+    private String xUserUsername;
+    private String oUserUsername;
 }

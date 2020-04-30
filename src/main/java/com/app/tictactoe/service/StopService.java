@@ -2,19 +2,14 @@ package com.app.tictactoe.service;
 
 import com.app.tictactoe.dao.GameDao;
 import com.app.tictactoe.dao.StopDao;
-import com.app.tictactoe.model.Field;
 import com.app.tictactoe.model.Game;
 import com.app.tictactoe.model.Stop;
 import com.app.tictactoe.other.builder.StopBuilder;
 import com.app.tictactoe.other.exceptions.GameNotFoundException;
-import com.app.tictactoe.other.exceptions.StopNotFoundException;
-import com.app.tictactoe.other.websocket.StopMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class StopService {

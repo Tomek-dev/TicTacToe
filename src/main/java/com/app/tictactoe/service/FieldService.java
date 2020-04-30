@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,14 +30,14 @@ public class FieldService {
     }
 
     public void saveAll(Set<FieldAction> messages, Stop stop){
-        Set<Field> fields =  messages.stream()
+        List<Field> fields =  messages.stream()
                 .map(field -> Field.builder()
                         .col(field.getCol())
                         .row(field.getRow())
                         .mark(field.getMark())
                         .stop(stop)
                         .build()
-                ).collect(Collectors.toSet());
+                ).collect(Collectors.toList());
         fieldDao.saveAll(fields);
     }
 
