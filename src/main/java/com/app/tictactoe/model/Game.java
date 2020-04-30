@@ -1,5 +1,6 @@
 package com.app.tictactoe.model;
 
+import com.app.tictactoe.other.enums.Process;
 import com.app.tictactoe.other.enums.Win;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,8 @@ public class Game {
     private Long id;
 
     private LocalDate date;
+
+    private Process process;
 
     @ManyToOne
     private Player x;

@@ -27,4 +27,7 @@ public class Player {
 
     @OneToMany(mappedBy = "o")
     private Set<Game> o = new HashSet<>();
+
+    @OneToOne(mappedBy = "player")
+    private PreGame preGame;
 }

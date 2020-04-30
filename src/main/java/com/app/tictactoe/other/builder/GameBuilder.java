@@ -3,6 +3,7 @@ package com.app.tictactoe.other.builder;
 import com.app.tictactoe.model.Game;
 import com.app.tictactoe.model.Player;
 import com.app.tictactoe.model.Stop;
+import com.app.tictactoe.other.enums.Process;
 import com.app.tictactoe.other.enums.Win;
 
 public class GameBuilder {
@@ -35,6 +36,11 @@ public class GameBuilder {
 
     public GameBuilder winner(Win winner){
         game.setWinner(winner);
+        return this;
+    }
+
+    public GameBuilder process(Process process){
+        game.setProcess(process);
         return this;
     }
 
