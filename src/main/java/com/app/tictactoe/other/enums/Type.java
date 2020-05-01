@@ -4,7 +4,7 @@ public enum Type {
     CREATE,
     WIN,
     GAME,
-    STOP,
+    DISCONNECT,
     RECONNECT,
-    UPDATE
+    STATE
 }

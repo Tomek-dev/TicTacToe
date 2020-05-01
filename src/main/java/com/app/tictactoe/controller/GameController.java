@@ -1,15 +1,16 @@
 package com.app.tictactoe.controller;
 
 import com.app.tictactoe.model.Game;
-import com.app.tictactoe.model.Stop;
 import com.app.tictactoe.model.User;
+import com.app.tictactoe.other.dto.FieldDto;
 import com.app.tictactoe.other.dto.GameDto;
+import com.app.tictactoe.other.enums.Leave;
 import com.app.tictactoe.other.enums.Type;
 import com.app.tictactoe.other.websocket.*;
 import com.app.tictactoe.service.FieldService;
 import com.app.tictactoe.service.GameService;
 import com.app.tictactoe.service.PreGameService;
-import com.app.tictactoe.service.StopService;
+import com.app.tictactoe.service.DisconnectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,22 +19,22 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
-import java.util.Set;
+import java.util.List;
 
 @Controller
 public class GameController {
 
     private SimpMessageSendingOperations sendingOperations;
-    private StopService stopService;
+    private DisconnectService disconnectService;
     private GameService gameService;
     private FieldService fieldService;
     private PreGameService preGameService;
 
     @Autowired
-    public GameController(SimpMessageSendingOperations sendingOperations, StopService stopService,
+    public GameController(SimpMessageSendingOperations sendingOperations, DisconnectService disconnectService,
                           GameService gameService, FieldService fieldService, PreGameService preGameService) {
         this.sendingOperations = sendingOperations;
-        this.stopService = stopService;
+        this.disconnectService = disconnectService;
         this.gameService = gameService;
         this.fieldService = fieldService;
         this.preGameService = preGameService;
@@ -45,15 +46,10 @@ public class GameController {
     //if not exists frontend will create/join to game
     @MessageMapping("/game.connect")
     public void connect(@AuthenticationPrincipal User user){
-        if(gameService.existsGame(user.getPlayer())){
+        if(gameService.existActualGame(user.getPlayer())){
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
+            return;
         }
-    }
-
-    //create
-    //if exists any pre-game then creates a new game, else creates new pre-game
-    @MessageMapping("/game.create")
-    public void create(@AuthenticationPrincipal User user){
         if (preGameService.existsAny()){
             Game game = gameService.create(user.getPlayer());
             InfoMessage message = new InfoMessage(Type.CREATE, game.getId().toString());
@@ -65,13 +61,14 @@ public class GameController {
     }
 
     //send
-    //sends message informing about the opponent's action
-    @MessageMapping("/game/{username}.send")
-    public void send(@Payload GameMessage gameMessage,
-                     @DestinationVariable String username,
-                     @AuthenticationPrincipal User user){
-        sendingOperations.convertAndSendToUser(username, "/queue/game", gameMessage);
-        sendingOperations.convertAndSendToUser(user.getUsername(), "/queue", gameMessage);
+    //sends message informing about the opponent's action and save it to DB
+    @MessageMapping("/game/{id}.send")
+    public void send(@Payload GameMessage message,
+                     @DestinationVariable Long id){
+        GameDto gameDto = gameService.findById(id);
+        fieldService.create(message, id);
+        sendingOperations.convertAndSendToUser(gameDto.getOUserUsername(), "/queue/game", message);
+        sendingOperations.convertAndSendToUser(gameDto.getXUserUsername(), "/queue/game", message);
     }
 
     //delete
@@ -81,29 +78,29 @@ public class GameController {
         preGameService.delete(user.getPlayer());
     }
 
-    //stop
-    //saves the actual state of the game to DB and inform opponent about a disconnect
-    //if both of players disconnect removes the game
-    @MessageMapping("/game/{username}/{id}.stop")
-    public void stop(@Payload StopMessage stopMessage, @DestinationVariable String username, @DestinationVariable Long id){
-        if(!stopService.existsByGameId(id)){
-            Stop stop = stopService.create(id);
-            fieldService.saveAll(stopMessage.getFields(), stop);
-            InfoMessage message = new InfoMessage(Type.STOP, "The opponent has left the game.");
-            sendingOperations.convertAndSendToUser(username, "/queue/game", message);
-        }
+    //disconnect
+    //create new disconnect
+    @MessageMapping("/game/{id}.disconnect")
+    public void disconnect(@Payload DisconnectMessage message, @DestinationVariable Long id, @AuthenticationPrincipal User user){
+        disconnectService.create(id, message.getLeave());
+        sendingOperations.convertAndSendToUser(message.getPlayer(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
+        sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
     }
 
-    //update
+    //reconnect
     //updates state of the game after disconnect
-    @MessageMapping("/game/{id].update")
-    public void update(@DestinationVariable Long id){
-        Set<FieldAction> fields = fieldService.findByGameId(id);
-        UpdateMessage message = new UpdateMessage(Type.UPDATE, fields);
-        GameDto gameDto = gameService.findById(id);
-        sendingOperations.convertAndSendToUser(gameDto.getOUserUsername(), "/queue/game", message);
-        sendingOperations.convertAndSendToUser(gameDto.getXUserUsername(), "/queue/game", message);
-        stopService.deleteByGameId(id);
+    //If one of the players disconnected then delete disconnect from DB
+    //else if both players disconnected set enum leave
+    //and send info to the connected player that opponent left the game
+    @MessageMapping("/game.reconnect")
+    public void reconnect(@AuthenticationPrincipal User user){
+        GameDto gameDto = gameService.findActualGame(user.getPlayer());
+        List<FieldDto> fields = fieldService.findByGameId(gameDto.getId());
+        ReconnectMessage message = new ReconnectMessage(Type.STATE, fields);
+        sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", message);
+        if(disconnectService.reconnect(gameDto.getId(), (user.getUsername().equals(gameDto.getOUserUsername())? Leave.X_LEFT : Leave.O_LEFT))){
+            sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
+        }
     }
 
     //win
@@ -111,7 +108,6 @@ public class GameController {
     @MessageMapping("/game/{username}/{id}.win")
     public void win(@Payload WinMessage message, @DestinationVariable Long id, @DestinationVariable String username){
         gameService.setWinner(id, message.getWinner());
-        stopService.deleteByGameId(id);
         sendingOperations.convertAndSendToUser(username, "/queue/game", message);
     }
 }

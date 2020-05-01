@@ -44,8 +44,14 @@ public class GameService {
         gameDao.save(game);
     }
 
-    public Boolean existsGame(Player player){
+    public Boolean existActualGame(Player player){
         return gameDao.existsByXOrOAndProcess(player, player, Process.DURING);
+    }
+
+    public GameDto findActualGame(Player player){
+        Optional<Game> gameOptional = gameDao.findByXOrOAndProcess(player, player, Process.DURING);
+        Game game = gameOptional.orElseThrow(GameNotFoundException::new);
+        return mapper.map(game, GameDto.class);
     }
 
     public Game create(Player player){

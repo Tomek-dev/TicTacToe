@@ -1,10 +1,13 @@
 package com.app.tictactoe.other.builder;
 
+import com.app.tictactoe.model.Field;
 import com.app.tictactoe.model.Game;
 import com.app.tictactoe.model.Player;
-import com.app.tictactoe.model.Stop;
+import com.app.tictactoe.model.Disconnect;
 import com.app.tictactoe.other.enums.Process;
 import com.app.tictactoe.other.enums.Win;
+
+import java.util.Set;
 
 public class GameBuilder {
 
@@ -29,8 +32,8 @@ public class GameBuilder {
         return this;
     }
 
-    public GameBuilder stop(Stop stop){
-        game.setStop(stop);
+    public GameBuilder disconnect(Disconnect disconnect){
+        game.setDisconnect(disconnect);
         return this;
     }
 
@@ -41,6 +44,11 @@ public class GameBuilder {
 
     public GameBuilder process(Process process){
         game.setProcess(process);
+        return this;
+    }
+
+    public GameBuilder fields(Set<Field> fields){
+        game.setFields(fields);
         return this;
     }
 

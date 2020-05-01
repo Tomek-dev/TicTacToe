@@ -23,5 +23,5 @@ public class Field {
     private Mark mark;
 
     @ManyToOne
-    private Stop stop;
+    private Game game;
 }

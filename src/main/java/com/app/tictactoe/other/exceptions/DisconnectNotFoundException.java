@@ -4,16 +4,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such Stop")
-public class StopNotFoundException extends RuntimeException {
-    public StopNotFoundException() {
+public class DisconnectNotFoundException extends RuntimeException {
+    public DisconnectNotFoundException() {
         super("Stop not found.");
     }
 
-    public StopNotFoundException(String message) {
+    public DisconnectNotFoundException(String message) {
         super(message);
     }
 
-    public StopNotFoundException(Throwable cause) {
+    public DisconnectNotFoundException(Throwable cause) {
         super(cause);
     }
 }

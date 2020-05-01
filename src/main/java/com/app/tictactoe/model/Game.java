@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,6 +23,8 @@ public class Game {
 
     private Process process;
 
+    private Win winner;
+
     @ManyToOne
     private Player x;
 
@@ -28,9 +32,10 @@ public class Game {
     private Player o;
 
     @OneToOne(mappedBy = "game")
-    private Stop stop;
+    private Disconnect disconnect;
 
-    private Win winner;
+    @OneToMany(mappedBy = "game")
+    private Set<Field> fields = new HashSet<>();
 
     public Game() {
         date = LocalDate.now();

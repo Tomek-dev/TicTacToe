@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class GameDto {
 
+    private Long id;
     private String xUserUsername;
     private String oUserUsername;
 }

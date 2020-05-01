@@ -1,9 +1,7 @@
 package com.app.tictactoe.other.enums;
 
-public enum Win {
-    X,
-    O,
-    O_LEFT,
+public enum Leave {
     X_LEFT,
-    DRAW
+    O_LEFT,
+    BOTH_LEFT;
 }
