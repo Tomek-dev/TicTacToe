@@ -1,0 +1,47 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#container{
+    height: 100vh;
+    width: 100%;
+}
+
+#option{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    min-width: 300px;
+    width: 25%;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+}
+
+.option-game{
+    text-align: center;
+    padding: 0 10px;
+}
+
+.option-game p{
+    color: #4f4f4f;
+}
+
+.option-link{
+    text-decoration: none;
+    color: #fff;
+    background-color: #14bdac;
+    font-size: 1.4rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+}

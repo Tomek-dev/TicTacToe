@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+<div id="header" th:fragment="header">
+    <a th:href="@{/}" class="logo"><span class="green">Tic</span><span class="grey">Tac</span><span class="green">Toe</span></a>
+    <div id="header-auth">
+        <a id="header-login" th:href="@{/login}">Login</a>
+        <a id="header-sign-up" th:href="@{/sign-up}">Sign Up</a>
+    </div>
+</div>
+<div id="bottom" th:fragment="bottom">
+    <a th:href="@{/}" class="logo"><span class="green">Tic</span><span class="white">Tac</span><span class="green">Toe</span></a>
+    <a class="bottom-link">About</a>
+    <a class="bottom-link">Contact</a>
+    <a class="bottom-link">Help</a>
+</div>
+</body>
+</html>
