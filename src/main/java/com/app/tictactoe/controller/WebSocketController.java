@@ -16,13 +16,13 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 @Controller
-public class GameController {
+public class WebSocketController {
 
     private SimpMessageSendingOperations sendingOperations;
     private DisconnectService disconnectService;
@@ -31,8 +31,8 @@ public class GameController {
     private PreGameService preGameService;
 
     @Autowired
-    public GameController(SimpMessageSendingOperations sendingOperations, DisconnectService disconnectService,
-                          GameService gameService, FieldService fieldService, PreGameService preGameService) {
+    public WebSocketController(SimpMessageSendingOperations sendingOperations, DisconnectService disconnectService,
+                               GameService gameService, FieldService fieldService, PreGameService preGameService) {
         this.sendingOperations = sendingOperations;
         this.disconnectService = disconnectService;
         this.gameService = gameService;
@@ -45,14 +45,19 @@ public class GameController {
     //if yes frontend will reconnect to the game
     //if not exists frontend will create/join to game
     @MessageMapping("/game.connect")
-    public void connect(@AuthenticationPrincipal User user){
+    public void connect(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         if(gameService.existActualGame(user.getPlayer())){
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
             return;
         }
         if (preGameService.existsAny()){
             Game game = gameService.create(user.getPlayer());
-            InfoMessage message = new InfoMessage(Type.CREATE, game.getId().toString());
+            CreateMessage message = new CreateMessage();
+            message.setType(Type.CREATE);
+            message.setId(game.getId());
+            message.setO(game.getO().getUser().getUsername());
+            message.setX(game.getX().getUser().getUsername());
             sendingOperations.convertAndSendToUser(game.getX().getUser().getUsername(), "/queue/game", message);
             sendingOperations.convertAndSendToUser(game.getO().getUser().getUsername(), "/queue/game", message);
             return;
@@ -74,14 +79,16 @@ public class GameController {
     //delete
     //removes pre-game if user disconnects while searching opponent
     @MessageMapping("/game.delete")
-    public void delete(@AuthenticationPrincipal User user){
+    public void delete(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         preGameService.delete(user.getPlayer());
     }
 
     //disconnect
     //create new disconnect
     @MessageMapping("/game/{id}.disconnect")
-    public void disconnect(@Payload DisconnectMessage message, @DestinationVariable Long id, @AuthenticationPrincipal User user){
+    public void disconnect(@Payload DisconnectMessage message, @DestinationVariable Long id, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         disconnectService.create(id, message.getLeave());
         sendingOperations.convertAndSendToUser(message.getPlayer(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
         sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
@@ -93,10 +100,16 @@ public class GameController {
     //else if both players disconnected set enum leave
     //and send info to the connected player that opponent left the game
     @MessageMapping("/game.reconnect")
-    public void reconnect(@AuthenticationPrincipal User user){
+    public void reconnect(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
         GameDto gameDto = gameService.findActualGame(user.getPlayer());
         List<FieldDto> fields = fieldService.findByGameId(gameDto.getId());
-        ReconnectMessage message = new ReconnectMessage(Type.STATE, fields);
+        ReconnectMessage message = new ReconnectMessage();
+        message.setType(Type.RECONNECT);
+        message.setId(gameDto.getId());
+        message.setO(gameDto.getOUserUsername());
+        message.setX(gameDto.getXUserUsername());
+        message.setFields(fields);
         sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", message);
         if(disconnectService.reconnect(gameDto.getId(), (user.getUsername().equals(gameDto.getOUserUsername())? Leave.X_LEFT : Leave.O_LEFT))){
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
@@ -105,9 +118,11 @@ public class GameController {
 
     //win
     //sets winner of the game
-    @MessageMapping("/game/{username}/{id}.win")
-    public void win(@Payload WinMessage message, @DestinationVariable Long id, @DestinationVariable String username){
+    @MessageMapping("/game/{id}.win")
+    public void win(@Payload WinMessage message, @DestinationVariable Long id){
         gameService.setWinner(id, message.getWinner());
-        sendingOperations.convertAndSendToUser(username, "/queue/game", message);
+        GameDto gameDto = gameService.findById(id);
+        sendingOperations.convertAndSendToUser(gameDto.getOUserUsername(), "/queue/game", message);
+        sendingOperations.convertAndSendToUser(gameDto.getXUserUsername(), "/queue/game", message);
     }
 }

@@ -1,17 +1,15 @@
 package com.app.tictactoe.other.websocket;
 
-import com.app.tictactoe.other.enums.Mark;
 import com.app.tictactoe.other.enums.Type;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class GameMessage {
+public class CreateMessage {
 
-    private Mark turn;
     private Type type;
-    private Mark mark;
-    private Integer row;
-    private Integer col;
+    private Long id;
+    private String x;
+    private String o;
 }

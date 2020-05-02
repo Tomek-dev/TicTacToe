@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/game.css}">
+    <link rel="stylesheet" th:href="@{/css/elements.css}">
+</head>
+<body>
+<div id="container">
+    <div th:replace="elements :: header"></div>
+    <div id="game">
+        <div id="board">
+
+        </div>
+        <div id="game-info">
+            <h1>Game</h1>
+            <p>You're <span id="game-player" class="game-mark"></span></p>
+            <p>To win succeed place four of your marks in a horizontal, vertical, or diagonal row.</p>
+            <p id="game-message">Now the move has: <span id="game-turn" class="game-mark">X</span></p>
+        </div>
+    </div>
+    <div id="loading">
+        <p>Looking for the opponent...</p>
+    </div>
+    <div th:replace="elements :: bottom"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript">
+    var username = [[${#authentication.getPrincipal().getUsername()}]];
+    const game = document.getElementById('game'),
+          board = document.getElementById('board'),
+          loading = document.getElementById('loading'),
+          playerMark = document.getElementById('game-player'),
+          actualTurn = document.getElementById('game-turn'),
+          gameMessage = document.getElementById('game-message');
+    var id = null;
+        fields = new Array(10),
+        buttons = new Array(10);
+        turn = 'X',
+        player = null,
+        winner = null;
+
+    /*not working*/
+    function load(data){
+        for(let item of data){
+            fields[item.row][item.col] = (item.mark === 'X'? 1 : 0);
+            buttons[item.row][item.col].innerText = item.mark;
+        }
+    }
+</script>
+<script th:src="@{/js/webSocket.js}"></script>
+<script th:src="@{/js/game.js}"></script>
+</body>
+</html>

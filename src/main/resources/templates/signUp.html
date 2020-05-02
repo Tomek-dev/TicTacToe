@@ -6,9 +6,11 @@
     <title>Sign Up</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/signUp.css}">
+    <link rel="stylesheet" th:href="@{/css/elements.css}">
 </head>
 <body>
 <div id="container">
+    <div th:replace="elements :: header"></div>
     <form autocomplete="off" id="sign-up" th:action="@{/sign-up}" th:object="${signUp}" method="post">
         <h1>Sign Up</h1>
         <input type="text" th:field="*{username}" placeholder="username"
@@ -24,12 +26,13 @@
                th:style="${#fields.hasErrors('global')}? 'margin-bottom: 6px': ''" class="sign-up-input">
         <div class="alert-errors" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></div>
         <div class="account">
-            Already have an account? <a id="login-link" th:href="@{/login}">login</a>
+            Already have an account? <a id="login-link" th:href="@{/login}">Login</a>
         </div>
         <div class="btn">
-            <button type="submit" class="sign-up-btn">sign up</button>
+            <button type="submit" class="sign-up-btn">Sign Up</button>
         </div>
     </form>
+    <div th:replace="elements :: bottom"></div>
 </div>
 </body>
 </html>

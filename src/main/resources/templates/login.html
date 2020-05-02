@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/elements.css}">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Login</title>
 </head>
 <body>
 <div id="container">
+    <div th:replace="elements :: header"></div>
     <form autocomplete="off" id="login" th:action="@{/login}" method="post">
         <h1>Login</h1>
         <div th:if="${param.logout}" class="alert-success">
@@ -20,12 +22,13 @@
             Invalid username and password.
         </div>
         <div class="account">
-            Don't have an account? <a id="sign-up-link" th:href="@{/sign-up}">sign up</a>
+            Don't have an account? <a id="sign-up-link" th:href="@{/sign-up}">Sign Up</a>
         </div>
         <div class="btn">
-            <button type="submit" class="login-btn">login</button>
+            <button type="submit" class="login-btn">Login</button>
         </div>
     </form>
+    <div th:replace="elements :: bottom"></div>
 </div>
 </body>
 </html>
