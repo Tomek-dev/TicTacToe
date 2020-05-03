@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface GameDao extends JpaRepository<Game, Long> {
-    Boolean existsByXOrOAndProcess(Player x, Player o, Process process);
-    Optional<Game> findByXOrOAndProcess(Player x, Player o, Process during);
+    Boolean existsByXAndProcessOrOAndProcess(Player x, Process processX, Player o, Process processO);
+    Optional<Game> findByXAndProcessOrOAndProcess(Player x, Process processX, Player o, Process processO);
 }

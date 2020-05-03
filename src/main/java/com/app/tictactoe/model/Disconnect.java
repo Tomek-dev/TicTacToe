@@ -20,7 +20,7 @@ public class Disconnect {
 
     private Leave leave;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 

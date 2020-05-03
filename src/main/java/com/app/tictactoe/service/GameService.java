@@ -41,15 +41,16 @@ public class GameService {
         Optional<Game> gameOptional = gameDao.findById(id);
         Game game = gameOptional.orElseThrow(GameNotFoundException::new);
         game.setWinner(winner);
+        game.setProcess(Process.ENDED);
         gameDao.save(game);
     }
 
     public Boolean existActualGame(Player player){
-        return gameDao.existsByXOrOAndProcess(player, player, Process.DURING);
+        return gameDao.existsByXAndProcessOrOAndProcess(player, Process.DURING, player, Process.DURING);
     }
 
     public GameDto findActualGame(Player player){
-        Optional<Game> gameOptional = gameDao.findByXOrOAndProcess(player, player, Process.DURING);
+        Optional<Game> gameOptional = gameDao.findByXAndProcessOrOAndProcess(player, Process.DURING, player, Process.DURING);
         Game game = gameOptional.orElseThrow(GameNotFoundException::new);
         return mapper.map(game, GameDto.class);
     }

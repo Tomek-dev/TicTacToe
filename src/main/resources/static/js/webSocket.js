@@ -88,6 +88,10 @@ function onMessageReceived(payload){
             gameMessage.innerText = 'Draw!';
             return;
         }
+        if(message.winner === 'O_LEFT' || message.winner === 'X_LEFT'){
+            gameMessage.innerText = 'You Won because of opponent disconnect.';
+            return;
+        }
         gameMessage.innerText = 'The winner is ' + message.winner + '!';
     }
 }
