@@ -38,7 +38,7 @@ public class DisconnectService {
         }
         if(!game.getDisconnect().getLeave().equals(leave)){
             game.getDisconnect().setLeave(Leave.BOTH_LEFT);
-            gameDao.save(game);
+            disconnectDao.save(game.getDisconnect());
         }
     }
 

@@ -60,14 +60,14 @@ public class DisconnectServiceTest {
                 .build();
         game.setDisconnect(disconnect);
         given(gameDao.findById(Mockito.any())).willReturn(Optional.of(game));
-        final Game[] saved = new Game[1];
-        given(gameDao.save(Mockito.any())).willAnswer(invocationOnMock -> saved[0] = (Game) invocationOnMock.getArguments()[0]);
+        final Disconnect[] saved = new Disconnect[1];
+        given(disconnectDao.save(Mockito.any())).willAnswer(invocationOnMock -> saved[0] = (Disconnect) invocationOnMock.getArguments()[0]);
 
         //when
         disconnectService.create(4L, Leave.X_LEFT);
 
         //then
-        assertEquals(Leave.BOTH_LEFT, saved[0].getDisconnect().getLeave());
+        assertEquals(Leave.BOTH_LEFT, saved[0].getLeave());
     }
 
     @Test
