@@ -17,8 +17,8 @@ public class PreGameService {
         this.preGameDao = preGameDao;
     }
 
-    public Boolean existsAny(){
-        return preGameDao.count() > 0;
+    public Boolean exists(Player player){
+        return preGameDao.existsByPlayerNot(player);
     }
 
     public void create(Player player){

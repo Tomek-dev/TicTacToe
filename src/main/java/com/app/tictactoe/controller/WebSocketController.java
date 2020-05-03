@@ -51,7 +51,7 @@ public class WebSocketController {
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
             return;
         }
-        if (preGameService.existsAny()){
+        if (preGameService.exists(user.getPlayer())){
             Game game = gameService.create(user.getPlayer());
             CreateMessage message = new CreateMessage();
             message.setType(Type.CREATE);

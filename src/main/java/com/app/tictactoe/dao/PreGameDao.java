@@ -12,4 +12,5 @@ public interface PreGameDao extends JpaRepository<PreGame, Long> {
     Optional<PreGame> findTop1ByOrderByIdAsc();
     Boolean existsByPlayer(Player player);
     void deleteByPlayer(Player player);
+    Boolean existsByPlayerNot(Player player);
 }

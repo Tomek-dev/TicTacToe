@@ -34,15 +34,16 @@
     const game = document.getElementById('game'),
           board = document.getElementById('board'),
           loading = document.getElementById('loading'),
-          playerMark = document.getElementById('game-player'),
-          actualTurn = document.getElementById('game-turn'),
-          gameMessage = document.getElementById('game-message');
-    var id = null;
+          playerMark = document.getElementById('game-player');
+    var actualTurn = document.getElementById('game-turn'),
+        gameMessage = document.getElementById('game-message'),
+        id = null,
         fields = new Array(10),
-        buttons = new Array(10);
+        buttons = new Array(10),
         turn = 'X',
         player = null,
-        winner = null;
+        winner = null,
+        move = 0;
 </script>
 <script th:src="@{/js/webSocket.js}"></script>
 <script th:src="@{/js/game.js}"></script>

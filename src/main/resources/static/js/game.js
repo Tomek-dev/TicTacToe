@@ -23,11 +23,15 @@ function pick(event) {
     fields[row][column] = ((player)? 0 : 1);
     buttons[row][column].innerText = player;
     buttons[row][column].style.color = (player === 'X'? '#444' : '#fff');
+    turn = (turn === 'X' ? 'O' : 'X');
     send(row, column, player, (player === 'X' ? 'O' : 'X'));
     console.log(fields)
     if(check() === true){
       win(winner)
       return;
+    }
+    if(move === 100){
+        win('DRAW');
     }
   }
 }

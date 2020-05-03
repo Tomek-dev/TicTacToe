@@ -44,22 +44,4 @@ public class PreGameServiceTest {
         //then
         assertEquals("player", saved[0].getPlayer().getUser().getUsername());
     }
-
-    @Test
-    public void shouldReturnTrue(){
-        //given
-        given(preGameDao.count()).willReturn(4L);
-
-        //then
-        assertTrue(preGameService.existsAny());
-    }
-
-    @Test
-    public void shouldReturnFalse(){
-        //given
-        given(preGameDao.count()).willReturn(0L);
-
-        //then
-        assertFalse(preGameService.existsAny());
-    }
 }
