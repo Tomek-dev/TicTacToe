@@ -5,6 +5,7 @@ import com.app.tictactoe.model.Player;
 import com.app.tictactoe.model.PreGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PreGameService {
@@ -29,6 +30,7 @@ public class PreGameService {
         }
     }
 
+    @Transactional
     public void delete(Player player){
         preGameDao.deleteByPlayer(player);
     }

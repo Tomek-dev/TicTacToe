@@ -43,14 +43,6 @@
         turn = 'X',
         player = null,
         winner = null;
-
-    /*not working*/
-    function load(data){
-        for(let item of data){
-            fields[item.row][item.col] = (item.mark === 'X'? 1 : 0);
-            buttons[item.row][item.col].innerText = item.mark;
-        }
-    }
 </script>
 <script th:src="@{/js/webSocket.js}"></script>
 <script th:src="@{/js/game.js}"></script>

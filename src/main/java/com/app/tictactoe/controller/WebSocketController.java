@@ -76,24 +76,6 @@ public class WebSocketController {
         sendingOperations.convertAndSendToUser(gameDto.getXUserUsername(), "/queue/game", message);
     }
 
-    //delete
-    //removes pre-game if user disconnects while searching opponent
-    @MessageMapping("/game.delete")
-    public void delete(Authentication authentication){
-        User user = (User) authentication.getPrincipal();
-        preGameService.delete(user.getPlayer());
-    }
-
-    //disconnect
-    //create new disconnect
-    @MessageMapping("/game/{id}.disconnect")
-    public void disconnect(@Payload DisconnectMessage message, @DestinationVariable Long id, Authentication authentication){
-        User user = (User) authentication.getPrincipal();
-        disconnectService.create(id, message.getLeave());
-        sendingOperations.convertAndSendToUser(message.getPlayer(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
-        sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
-    }
-
     //reconnect
     //updates state of the game after disconnect
     //If one of the players disconnected then delete disconnect from DB
@@ -105,13 +87,13 @@ public class WebSocketController {
         GameDto gameDto = gameService.findActualGame(user.getPlayer());
         List<FieldDto> fields = fieldService.findByGameId(gameDto.getId());
         ReconnectMessage message = new ReconnectMessage();
-        message.setType(Type.RECONNECT);
+        message.setType(Type.STATE);
         message.setId(gameDto.getId());
         message.setO(gameDto.getOUserUsername());
         message.setX(gameDto.getXUserUsername());
         message.setFields(fields);
         sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", message);
-        if(disconnectService.reconnect(gameDto.getId(), (user.getUsername().equals(gameDto.getOUserUsername())? Leave.X_LEFT : Leave.O_LEFT))){
+        if(disconnectService.reconnect(gameDto.getId(), (user.getUsername().equals(gameDto.getOUserUsername())? Leave.O_LEFT : Leave.X_LEFT))){
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
         }
     }

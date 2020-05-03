@@ -15,7 +15,7 @@ function onConnected() {
 
 function onError(error){
     gameMessage.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-    gameMessage.classList.remove('win');
+    gameMessage.classList.remove('message');
     gameMessage.classList.add('error');
 }
 
@@ -57,10 +57,14 @@ function onMessageReceived(payload){
    	    playerMark.innerText = player;
    	    loading.style.display = 'none';
    	    game.style.display = 'flex';
-	    load(message.fields);
-	    actualTurn.innerText = (data.size()%2 === 0 ? 'O' : 'X');
-        turn = (data.size()%2 === 0 ? 'O' : 'X');;
-	    /*not working*/
+	    for(let item of message.fields){
+            fields[item.row][item.col] = (item.mark === 'X'? 1 : 0);
+            buttons[item.row][item.col].innerText = item.mark;
+            buttons[item.row][item.col].style.color = (item.mark === 'X'? '#444' : '#fff');
+        }
+        let size = Object.keys(message.fields).length;
+	    actualTurn.innerText = (size%2 === 0 ? 'X' : 'O');
+        turn = (size%2 === 0 ? 'X' : 'O');
     } else if(message.type === 'GAME'){
         fields[message.row][message.col] = (message.mark === 'X'? 0 : 1);
         buttons[message.row][message.col].innerText = message.mark;
@@ -70,7 +74,7 @@ function onMessageReceived(payload){
     } else if(message.type === 'WIN'){
         turn = null;
         gameMessage.classList.remove('error');
-        gameMessage.classList.add('win');
+        gameMessage.classList.add('message');
         gameMessage.innerText = 'The winner is ' + message.winner + '!';
     }
 }
