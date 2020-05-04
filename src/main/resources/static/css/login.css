@@ -57,6 +57,32 @@ body{
     font-weight: 700;
 }
 
+
+#login-oauth p{
+    text-align: center;
+    margin: 4px 0;
+    color: #4f4f4f;
+}
+
+#login-oauth{
+    text-align: center;
+}
+
+#login-oauth a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin: 6px 0;
+    color: #4f4f4f;
+}
+
+#login-oauth i{
+    color: #211F1F;
+    margin-right: 5px;
+    font-size: 2rem;
+}
+
 .account{
     padding-top: 10px;
     text-align: center;

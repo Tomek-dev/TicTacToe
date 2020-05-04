@@ -9,3 +9,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  security:
+    oauth2:
+      client:
+       registration:
+        github:
+          clientId: #Secret
+          clientSecret: #Secret
+          scope:
+            - read:user

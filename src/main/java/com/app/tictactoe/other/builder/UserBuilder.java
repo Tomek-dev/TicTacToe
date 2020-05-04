@@ -2,6 +2,7 @@ package com.app.tictactoe.other.builder;
 
 import com.app.tictactoe.model.Player;
 import com.app.tictactoe.model.User;
+import com.app.tictactoe.other.enums.Provider;
 import com.app.tictactoe.other.enums.Role;
 
 import java.util.Set;
@@ -41,6 +42,11 @@ public class UserBuilder {
 
     public UserBuilder player(Player player){
         user.setPlayer(player);
+        return this;
+    }
+
+    public UserBuilder provider(Provider provider){
+        user.setProvider(provider);
         return this;
     }
 

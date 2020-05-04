@@ -2,6 +2,8 @@ package com.app.tictactoe.service;
 
 import com.app.tictactoe.dao.UserDao;
 import com.app.tictactoe.model.User;
+import com.app.tictactoe.other.enums.Provider;
+import com.app.tictactoe.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,8 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Optional<User> userOptional = userDao.findByUsername(s);
+        Optional<User> userOptional = userDao.findByUsernameAndProvider(s, Provider.BASIC);
         User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found."));
-        return user;
+        return UserPrincipal.create(user);
     }
 }

@@ -7,6 +7,7 @@ import com.app.tictactoe.other.dto.GameDto;
 import com.app.tictactoe.other.enums.Leave;
 import com.app.tictactoe.other.enums.Type;
 import com.app.tictactoe.other.websocket.*;
+import com.app.tictactoe.security.UserPrincipal;
 import com.app.tictactoe.service.FieldService;
 import com.app.tictactoe.service.GameService;
 import com.app.tictactoe.service.PreGameService;
@@ -46,7 +47,7 @@ public class WebSocketController {
     //if not exists frontend will create/join to game
     @MessageMapping("/game.connect")
     public void connect(Authentication authentication){
-        User user = (User) authentication.getPrincipal();
+        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
         if(gameService.existActualGame(user.getPlayer())){
             sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
             return;
@@ -83,7 +84,7 @@ public class WebSocketController {
     //and send info to the connected player that opponent left the game
     @MessageMapping("/game.reconnect")
     public void reconnect(Authentication authentication){
-        User user = (User) authentication.getPrincipal();
+        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
         GameDto gameDto = gameService.findActualGame(user.getPlayer());
         List<FieldDto> fields = fieldService.findByGameId(gameDto.getId());
         ReconnectMessage message = new ReconnectMessage();

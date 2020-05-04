@@ -7,6 +7,7 @@ import com.app.tictactoe.model.User;
 import com.app.tictactoe.other.builder.PlayerBuilder;
 import com.app.tictactoe.other.builder.UserBuilder;
 import com.app.tictactoe.other.dto.SignUpDto;
+import com.app.tictactoe.other.enums.Provider;
 import com.app.tictactoe.other.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,7 @@ public class UserService {
         User user = UserBuilder.builder()
                 .username(signUp.getUsername())
                 .email(signUp.getEmail())
+                .provider(Provider.BASIC)
                 .password(passwordEncoder.encode(signUp.getPassword()))
                 .roles(Collections.singleton(Role.User))
                 .build();

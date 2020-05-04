@@ -1,5 +1,6 @@
 package com.app.tictactoe.config;
 
+import com.app.tictactoe.security.CustomOAuth2UserService;
 import com.app.tictactoe.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +16,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl userDetailsService;
+    private CustomOAuth2UserService oAuth2UserService;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
+                             CustomOAuth2UserService oAuth2UserService) {
         this.userDetailsService = userDetailsService;
+        this.oAuth2UserService = oAuth2UserService;
     }
 
     @Bean
@@ -36,9 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/**/*.js", "/**/*.css").permitAll()
-                    .antMatchers("/sign-up", "/").permitAll()
+                    .antMatchers("/sign-up", "/", "/login/oauth/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
+                .httpBasic()
+                .and()
                 .formLogin()
                     .loginPage("/login")
                     .failureUrl("/login?error")
@@ -47,6 +53,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .permitAll();
+                    .permitAll()
+                    .and()
+                .oauth2Login()
+                    .loginPage("/login")
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService);
     }
 }

@@ -6,6 +6,7 @@ import com.app.tictactoe.model.Player;
 import com.app.tictactoe.model.User;
 import com.app.tictactoe.other.builder.PlayerBuilder;
 import com.app.tictactoe.other.builder.UserBuilder;
+import com.app.tictactoe.other.enums.Provider;
 import com.app.tictactoe.other.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,7 @@ public class Start {
                 .username("simba")
                 .email("simba@email.email")
                 .roles(Collections.singleton(Role.User))
+                .provider(Provider.BASIC)
                 .password(passwordEncoder.encode("password"))
                 .build();
         players[0] = PlayerBuilder.builder()
@@ -45,6 +47,7 @@ public class Start {
                 .username("timon")
                 .email("timon@email.email")
                 .roles(Collections.singleton(Role.User))
+                .provider(Provider.BASIC)
                 .password(passwordEncoder.encode("password"))
                 .build();
         players[1] = PlayerBuilder.builder()

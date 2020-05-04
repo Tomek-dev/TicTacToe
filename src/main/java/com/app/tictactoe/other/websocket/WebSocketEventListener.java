@@ -7,6 +7,7 @@ import com.app.tictactoe.other.enums.Leave;
 import com.app.tictactoe.other.enums.Type;
 import com.app.tictactoe.other.exceptions.UserNotFoundException;
 import com.app.tictactoe.other.websocket.InfoMessage;
+import com.app.tictactoe.security.UserPrincipal;
 import com.app.tictactoe.service.DisconnectService;
 import com.app.tictactoe.service.GameService;
 import com.app.tictactoe.service.PreGameService;
@@ -42,7 +43,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
 
         Authentication authentication = (Authentication) accessor.getUser();
-        User user = (User) authentication.getPrincipal();
+        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
         if(user != null){
             if(gameService.existActualGame(user.getPlayer())){
                 disconnectGame(user);
@@ -52,14 +53,14 @@ public class WebSocketEventListener {
         }
     }
 
-    private void disconnectGame(User user){
+    private void disconnectGame(UserPrincipal user){
         GameDto gameDto = gameService.findActualGame(user.getPlayer());
         disconnectService.create(gameDto.getId(), (user.getUsername().equals(gameDto.getOUserUsername()) ? Leave.O_LEFT : Leave.X_LEFT));
         sendingOperations.convertAndSendToUser((user.getUsername().equals(gameDto.getOUserUsername()) ? gameDto.getXUserUsername() : gameDto.getOUserUsername()), "/queue/game", new InfoMessage(Type.DISCONNECT, "The opponent has left the game."));
         sendingOperations.convertAndSendToUser(user.getUsername(), "/queue/game", new InfoMessage(Type.RECONNECT, "Reconnected to the game."));
     }
 
-    private void disconnectPreGame(User user){
+    private void disconnectPreGame(UserPrincipal user){
         preGameService.delete(user.getPlayer());
     }
 }
