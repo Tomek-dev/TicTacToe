@@ -12,6 +12,3 @@ Project is created with:
 * Thymeleaf
 * PostgreSQL
 * JUnit/Mockito
-
-## Project status
-At this moment app allows only to play a game with an opponent. In the future, I'm going to add some extra options.
