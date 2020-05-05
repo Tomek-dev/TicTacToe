@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/elements.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+<div id="container">
+    <div th:replace="elements :: header"></div>
+    <div id="profile">
+        <div id="profile-info">
+            <div id="profile-header">
+                <p id="profile-name" th:text="${#authentication.getPrincipal().getUsername()}"></p>
+                <p class="profile-element"><i class="icon fa fa-gamepad"></i><span th:text="${count}"></span></p>
+            </div>
+            <div id="profile-game-info">
+                <p class="profile-element"><i class="icon fa fa-trophy"></i><span th:text="${wins}"></span></p>
+                <p class="profile-element"><i class="icon fa fa-frown-o"></i><span th:text="${defeats}"></span></p>
+                <p class="profile-element"><i class="icon fa fa-handshake-o "></i><span th:text="${draws}"></span></p>
+            </div>
+            <div id="profile-game">
+                <div th:each="game : ${games}" class="topic">
+                    <p th:if="${game.winner == null}"><i class="icon fa fa-handshake-o "></i></p>
+                    <p th:if="${game.winner != null && game.winner == #authentication.getPrincipal().getUsername()}"><i class="icon fa fa-trophy"></i></p>
+                    <p th:if="${game.winner != null && game.winner != #authentication.getPrincipal().getUsername()}"><i class="icon fa fa-frown-o"></i></p>
+                    <p><span th:text="${game.xUserUsername}"></span> vs <span th:text="${game.oUserUsername}"></span></p>
+                    <p th:text="${game.date}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="elements :: bottom"></div>
+</div>
+</body>
+</html>

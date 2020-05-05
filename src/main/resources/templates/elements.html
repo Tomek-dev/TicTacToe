@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 </head>
 <body>
 <div id="header" th:fragment="header">
     <a th:href="@{/}" class="logo"><span class="green">Tic</span><span class="grey">Tac</span><span class="green">Toe</span></a>
-    <div id="header-auth">
+    <div class="header-auth" sec:authorize="isAnonymous()">
         <a id="header-login" th:href="@{/login}">Login</a>
         <a id="header-sign-up" th:href="@{/sign-up}">Sign Up</a>
+    </div>
+    <div class="header-auth" sec:authorize="isAuthenticated()">
+        <a id="header-profile" th:href="@{/profile}">Profile</a>
+        <a id="header-logout" th:href="@{/logout}">Logout</a>
     </div>
 </div>
 <div id="bottom" th:fragment="bottom">

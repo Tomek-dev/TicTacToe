@@ -7,6 +7,7 @@ import com.app.tictactoe.model.Disconnect;
 import com.app.tictactoe.other.enums.Process;
 import com.app.tictactoe.other.enums.Win;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class GameBuilder {
@@ -49,6 +50,11 @@ public class GameBuilder {
 
     public GameBuilder fields(Set<Field> fields){
         game.setFields(fields);
+        return this;
+    }
+
+    public GameBuilder date(LocalDate date){
+        game.setDate(date);
         return this;
     }
 

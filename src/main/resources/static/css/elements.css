@@ -14,6 +14,27 @@
 }
 
 #header-sign-up{
+     background-color: #14bdac;
+     color: #fff;
+     font-weight: 700;
+     border: none;
+     outline: none;
+     padding: 6px 12px;
+     font-size: 1rem;
+     cursor: pointer;
+     border-radius: 10px;
+     text-decoration: none;
+ }
+
+ #header-login{
+     margin-right: 15px;
+     color: #4f4f4f;
+     text-decoration: none;
+     font-weight: 700;
+ }
+
+
+#header-profile{
     background-color: #14bdac;
     color: #fff;
     font-weight: 700;
@@ -24,14 +45,16 @@
     cursor: pointer;
     border-radius: 10px;
     text-decoration: none;
+    margin-right: 10px;
 }
 
-#header-login{
+#header-logout{
     margin-right: 15px;
     color: #4f4f4f;
     text-decoration: none;
     font-weight: 700;
 }
+
 
 .logo{
     text-decoration: none;
@@ -56,7 +79,7 @@
     margin-right: 3px;
 }
 
-#header-auth{
+.header-auth{
     display: flex;
     align-items: center;
 }

@@ -1,0 +1,65 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#profile{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    min-width: 450px;
+    width: 70%;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#profile-info{
+    color: #4f4f4f;
+}
+
+#profile-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#profile-name{
+    margin: 0;
+    font-size: 2rem;
+}
+
+.profile-element{
+    font-size: 1.5rem;
+}
+
+.icon{
+    margin-right: 10px;
+}
+
+#profile-game-info{
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.5rem;
+}
+
+#profile-game{
+    height: 50vh;
+    overflow: auto;
+}
+
+.topic{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 0 15px;
+}
